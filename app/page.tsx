@@ -205,10 +205,17 @@ export default function Home() {
     setValorHacia(tempValor)
   }
 
-  // Utilidad para mostrar hasta 2 decimales pero sin ceros innecesarios
+  // Utilidad para mostrar hasta 2 decimales pero sin ceros innecesarios. Si el valor es menor a 0.01 pero mayor que 0, muestra hasta 10 decimales sin ceros extra.
   function formatNumber(num: number) {
     if (num === 0) return "0";
     if (Number.isInteger(num)) return num.toString();
+    if (Math.abs(num) < 0.01) {
+      // Mostrar hasta 10 decimales, sin ceros extra
+      let str = num.toFixed(10);
+      str = str.replace(/0+$/, '');
+      str = str.replace(/\.$/, '');
+      return str;
+    }
     const str = num.toFixed(2);
     return str.replace(/\.0+$/, '').replace(/(\.[1-9]*)0+$/, '$1');
   }
