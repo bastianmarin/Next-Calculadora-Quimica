@@ -175,7 +175,7 @@ export default function Home() {
       const valorBase = Number.parseFloat(valorDesde) * factorDesde
       const resultado = valorBase / factorHacia
 
-      setValorHacia(resultado.toFixed(2))
+      setValorHacia(formatNumber(resultado))
 
       // Calcular todas las conversiones para la tabla
       const todasConversiones = unidadesMedida[tipoMedida as keyof typeof unidadesMedida].unidades.map((unidad) => {
@@ -203,6 +203,14 @@ export default function Home() {
 
     setUnidadHacia(tempUnidad)
     setValorHacia(tempValor)
+  }
+
+  // Utilidad para mostrar hasta 2 decimales pero sin ceros innecesarios
+  function formatNumber(num: number) {
+    if (num === 0) return "0";
+    if (Number.isInteger(num)) return num.toString();
+    const str = num.toFixed(2);
+    return str.replace(/\.0+$/, '').replace(/(\.[1-9]*)0+$/, '$1');
   }
 
   return (
@@ -380,8 +388,8 @@ export default function Home() {
                     <TableRow key={conversion.unidad}>
                       <TableCell>{conversion.unidad}</TableCell>
                       <TableCell>{nombresFormales[conversion.unidad] || ""}</TableCell>
-                      <TableCell>{conversion.valor.toFixed(2)}</TableCell>
-                      <TableCell>{conversion.valor.toExponential(2)}</TableCell>
+                      <TableCell>{formatNumber(conversion.valor)}</TableCell>
+                      <TableCell>{Number(conversion.valor).toExponential(2).replace(/\.00e/, 'e').replace(/(\.[1-9]*)0+e/, '$1e').replace(/\.0+e/, 'e')}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
