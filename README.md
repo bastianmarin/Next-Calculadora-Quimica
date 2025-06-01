@@ -19,26 +19,32 @@ Este proyecto es una **calculadora de conversión de unidades de medida** desarr
 
 ## Instalación
 
-1. Clona este repositorio:
+1. Si no tienes `pnpm` instalado, instálalo globalmente con:
+
+   ```bash
+   npm install -g pnpm
+   ```
+
+2. Clona este repositorio:
 
    ```bash
    git clone https://github.com/bastianmarin/Next-Calculadora-Quimica.git
    cd Next-Calculadora-Quimica
    ```
 
-2. Instala las dependencias usando `pnpm`:
+3. Instala las dependencias usando `pnpm`:
 
    ```bash
    pnpm install
    ```
 
-3. Inicia el servidor de desarrollo:
+4. Inicia el servidor de desarrollo:
 
    ```bash
    pnpm dev
    ```
 
-4. Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
+5. Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
 ## Uso
 
