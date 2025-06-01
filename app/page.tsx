@@ -1,13 +1,14 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ArrowLeftRight, Circle, Weight, Ruler, FlaskConical, Gauge, Timer, Bolt, Move3D, BicepsFlexed, Lightbulb, Github } from "lucide-react"
+import { ArrowLeftRight, Circle, Weight, Ruler, FlaskConical, Gauge, Timer, Bolt, Move3D, BicepsFlexed, Lightbulb, Github, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent } from "@/components/ui/card"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
+import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet"
 
 // Definición de las unidades de medida
 const unidadesMedida = {
@@ -174,7 +175,7 @@ export default function Home() {
       const valorBase = Number.parseFloat(valorDesde) * factorDesde
       const resultado = valorBase / factorHacia
 
-      setValorHacia(resultado.toFixed(3))
+      setValorHacia(resultado.toFixed(2))
 
       // Calcular todas las conversiones para la tabla
       const todasConversiones = unidadesMedida[tipoMedida as keyof typeof unidadesMedida].unidades.map((unidad) => {
@@ -205,9 +206,49 @@ export default function Home() {
   }
 
   return (
-    <div className="flex min-h-screen">
-      {/* Barra lateral */}
-      <div className="w-64 bg-gray-100 border-r flex flex-col justify-between h-screen">
+    <div className="flex flex-col md:flex-row min-h-screen">
+      {/* Barra lateral mobile: Sheet */}
+      <div className="md:hidden">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="fixed top-4 left-4 z-30 bg-white/80 backdrop-blur border border-gray-200 shadow-md">
+              <Menu className="w-6 h-6" />
+              <span className="sr-only">Abrir menú de tipos de medición</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-0 w-64">
+            <div className="h-full flex flex-col justify-between">
+              <div className="p-4">
+                <h2 className="text-xl font-bold mb-4">Tipos de Medición</h2>
+                <ul className="space-y-2">
+                  {Object.keys(unidadesMedida).map((tipo) => (
+                    <li key={tipo}>
+                      <Button
+                        variant={tipoMedida === tipo ? "default" : "ghost"}
+                        className="w-full justify-start flex items-center gap-2 text-left px-3 py-2"
+                        onClick={() => setTipoMedida(tipo)}
+                      >
+                        {iconosTipo[tipo] || <Circle className="w-4 h-4 mr-2 text-gray-500" />}
+                        {unidadesMedida[tipo as keyof typeof unidadesMedida].nombre}
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="p-4">
+                <a href="https://github.com/bastianmarin/Next-Calculadora-Quimica" target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" className="w-full justify-start flex items-center gap-2">
+                    <Github className="w-4 h-4 mr-2" />
+                    Ir a GitHub
+                  </Button>
+                </a>
+              </div>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+      {/* Barra lateral desktop */}
+      <div className="hidden md:flex w-64 bg-gray-100 border-r flex-col justify-between h-screen fixed top-0 left-0 z-10">
         <div className="p-4">
           <h2 className="text-xl font-bold mb-4">Tipos de Medición</h2>
           <ul className="space-y-2">
@@ -215,7 +256,7 @@ export default function Home() {
               <li key={tipo}>
                 <Button
                   variant={tipoMedida === tipo ? "default" : "ghost"}
-                  className="w-full justify-start flex items-center gap-2"
+                  className="w-full justify-start flex items-center gap-2 text-left px-3 py-2"
                   onClick={() => setTipoMedida(tipo)}
                 >
                   {iconosTipo[tipo] || <Circle className="w-4 h-4 mr-2 text-gray-500" />}
@@ -234,9 +275,8 @@ export default function Home() {
           </a>
         </div>
       </div>
-
       {/* Contenido principal */}
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-4 md:p-6 md:ml-64">
         
         <h1 className="text-2xl font-bold mb-6">
           Conversión de {unidadesMedida[tipoMedida as keyof typeof unidadesMedida].nombre}
@@ -267,8 +307,8 @@ export default function Home() {
           <CardContent className="pt-6">
             <h2 className="text-xl font-bold mb-1">Calculadora de Conversión</h2>
             <p className="text-gray-600 mb-2 mt-0">Las conversiones mostradas a continuación son equivalentes entre sí.</p>
-            <div className="flex items-center gap-4">
-              <div className="flex-1 flex items-center gap-2">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-4">
+              <div className="flex flex-col gap-2 flex-1">
                 <Input
                   type="number"
                   value={valorDesde}
@@ -290,11 +330,11 @@ export default function Home() {
                 </Select>
               </div>
 
-              <Button variant="outline" size="icon" onClick={intercambiar} className="mx-4">
+              <Button variant="outline" size="icon" onClick={intercambiar} className="mx-0 md:mx-4 self-center md:self-auto">
                 <ArrowLeftRight className="h-4 w-4" />
               </Button>
 
-              <div className="flex-1 flex items-center gap-2">
+              <div className="flex flex-col gap-2 flex-1">
                 <Input
                   type="number"
                   value={valorHacia}
@@ -340,8 +380,8 @@ export default function Home() {
                     <TableRow key={conversion.unidad}>
                       <TableCell>{conversion.unidad}</TableCell>
                       <TableCell>{nombresFormales[conversion.unidad] || ""}</TableCell>
-                      <TableCell>{conversion.valor.toFixed(3)}</TableCell>
-                      <TableCell>{conversion.valor.toExponential(3)}</TableCell>
+                      <TableCell>{conversion.valor.toFixed(2)}</TableCell>
+                      <TableCell>{conversion.valor.toExponential(2)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
